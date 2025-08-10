@@ -1,6 +1,0 @@
-{"time":"2025-08-10 17:38:53","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
-{"time":"2025-08-10 17:39:48","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
-{"time":"2025-08-10 17:41:29","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
-{"time":"2025-08-10 17:43:21","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
-{"time":"2025-08-10 18:59:38","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
-{"time":"2025-08-10 19:00:26","level":"INFO","source":{"function":"github.com/afoninartem/delivery-price/l.InitLogger","file":"/home/afoninartem/delivery-price/l/logger.go","line":40},"msg":"start logging"}
