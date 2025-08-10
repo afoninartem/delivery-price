@@ -9,10 +9,12 @@ import (
 
 type Location struct {
 	gorm.Model
-	Name   string `json:"name"`
-	Lat    string `json:"lat"`
-	Lng    string `json:"lng"`
-	UserID int64  `json:"user_id"`
+	Name      string `json:"name"`
+	Lat       string `json:"lat"`
+	Lng       string `json:"lng"`
+	UserID    int64  `json:"user_id"`
+	Price     string `json:"price" gorm:"-"`
+	LastPrice string `json:"last_price" gorm:"-"`
 }
 
 func (l *Location) Validate() error {
@@ -42,6 +44,7 @@ func (l *Location) Update() error {
 		slog.Error("gorm save", "error", err)
 		return err
 	}
+	fmt.Printf("%+v\n", l)
 	return nil
 }
 

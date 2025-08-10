@@ -9,9 +9,10 @@ import (
 )
 
 var (
-	botApiKey  = os.Getenv("botApiKey")
-	bot        *tgbotapi.BotAPI
-	userStates = make(map[int64]*models.UserState)
+	botApiKey      = os.Getenv("botApiKey")
+	bot            *tgbotapi.BotAPI
+	userStates     = make(map[int64]*models.UserState)
+	userLastPrices = make(map[int64]map[uint]string)
 )
 
 func Bot() {
@@ -33,13 +34,16 @@ func Bot() {
 		case update.CallbackQuery != nil:
 			handleCallback(update.CallbackQuery)
 		default:
-			if _, e := userStates[update.Message.Chat.ID]; !e {
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Выберите один из пунктов меню.")
-				msg.ReplyMarkup = mainMenuKB()
-				bot.Send(msg)
-				continue
+			if update.Message != nil {
+				if _, e := userStates[update.Message.Chat.ID]; !e {
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Выберите один из пунктов меню.")
+					msg.ReplyMarkup = mainMenuKB()
+					bot.Send(msg)
+					continue
+				}
+				handleConversation(update)
 			}
-			handleConversation(update)
+
 		}
 	}
 }

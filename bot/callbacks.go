@@ -11,6 +11,7 @@ import (
 func handleCallback(cb *tgbotapi.CallbackQuery) {
 	var (
 		chatID = cb.Message.Chat.ID
+		msgID  = cb.Message.MessageID
 		data   = cb.Data
 		msg    = tgbotapi.NewMessage(chatID, "")
 	)
@@ -27,8 +28,6 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		}
 
 	case data == "edit_loc":
-		//! TODO: editing logic
-		// TODO: получить запись из БД
 		locs, err := getUserLocs(chatID)
 		if err != nil {
 			msg.Text = "Не удалось получить список локаций, попробуйте позже."
@@ -64,10 +63,36 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		msg.Text = fmt.Sprintf("Локация %s успешно удалена.", loc.Name)
 		msg.ReplyMarkup = mainMenuKB()
 	case data == "get_prices":
+		locs, err := getUserLocs(chatID)
+		if err != nil {
+			msg.Text = "Не удалось получить список локаций, попробуйте позже."
+			break
+		}
+		// kb := pricesKB(locs)
+		// msg.ReplyMarkup = kb
+		// msg.Text = "Актуальные расценки на тариф Экспресс:"
+
+		// edit := tgbotapi.NewEditMessageTextAndMarkup(chatID, msgID, "Актуальные расценки на тариф Экспресс:", pricesKB(locs))
+		// bot.Send(edit)
+		// return
+		msg.Text = "Актуальные расценки на тариф Экспресс:"
+		msg.ReplyMarkup = pricesKB(chatID, locs)
+		delMsg := tgbotapi.NewDeleteMessage(chatID, msgID)
+		bot.Send(delMsg)
 	case data == "help":
+		msg.Text = help()
 	case data == "abort":
-		// TODO: delete(userStates, chatID)
-		// TODO: replace current keyboard with main keyboard
+		///// TODO: delete(userStates, chatID)
+		///// TODO: replace current keyboard with main keyboard
+		delete(userStates, chatID)
+		text := "Выберите действие."
+		edit := tgbotapi.NewEditMessageTextAndMarkup(chatID, msgID, text, mainMenuKB())
+		bot.Send(edit)
+		return
+	case data == "nocb":
+		ans := tgbotapi.NewCallback(cb.ID, "") // пустое сообщение
+		ans.ShowAlert = false                  // не показывать алерт
+		bot.Request(ans)
 	}
 
 	bot.Send(msg)

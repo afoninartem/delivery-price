@@ -13,7 +13,7 @@ func InitLogger() {
 		slog.Error(fmt.Sprintln(err))
 		os.Exit(1)
 	}
-	defer file.Close()
+	// defer file.Close() - this file must be open until app closed
 
 	loc, err := time.LoadLocation("Europe/Moscow")
 	if err != nil {
