@@ -49,10 +49,7 @@ func pricesKB(chatID int64, locs []models.Location) tgbotapi.InlineKeyboardMarku
 	var keyboard [][]tgbotapi.InlineKeyboardButton
 	locsWithPrice := getPrices(chatID, locs)
 	for _, loc := range locsWithPrice {
-		// nameBtn := tgbotapi.NewInlineKeyboardButtonData(fmt.Sprintf("%s - %s", loc.Name, loc.Price), "nocb")
-		// TODO: mapBtn := tgbotapi.NewInlineKeyboardButtonData(fmt.Sprintf("%s - %s", loc.Name, loc.Price), "_")
-		// TODO: figure out how to pass user and destination point coords to yandex maps
-		priceRow := priceBtnRow(chatID, loc)
+		priceRow := priceBtnRow(loc)
 		row := tgbotapi.NewInlineKeyboardRow(priceRow...)
 		keyboard = append(keyboard, row)
 	}
@@ -63,7 +60,7 @@ func pricesKB(chatID int64, locs []models.Location) tgbotapi.InlineKeyboardMarku
 	return tgbotapi.NewInlineKeyboardMarkup(keyboard...)
 }
 
-func priceBtnRow(chatID int64, loc models.Location) []tgbotapi.InlineKeyboardButton {
+func priceBtnRow(loc models.Location) []tgbotapi.InlineKeyboardButton {
 	var row []tgbotapi.InlineKeyboardButton
 	nameBtn := tgbotapi.NewInlineKeyboardButtonData(loc.Name, "nocb")
 	priceDif := priceDif(loc)

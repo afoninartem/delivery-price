@@ -63,18 +63,13 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		msg.Text = fmt.Sprintf("Локация %s успешно удалена.", loc.Name)
 		msg.ReplyMarkup = mainMenuKB()
 	case data == "get_prices":
+		callback := tgbotapi.NewCallback(cb.ID, "Поиск цен")
+		bot.Send(callback)
 		locs, err := getUserLocs(chatID)
 		if err != nil {
 			msg.Text = "Не удалось получить список локаций, попробуйте позже."
 			break
 		}
-		// kb := pricesKB(locs)
-		// msg.ReplyMarkup = kb
-		// msg.Text = "Актуальные расценки на тариф Экспресс:"
-
-		// edit := tgbotapi.NewEditMessageTextAndMarkup(chatID, msgID, "Актуальные расценки на тариф Экспресс:", pricesKB(locs))
-		// bot.Send(edit)
-		// return
 		msg.Text = "Актуальные расценки на тариф Экспресс:"
 		msg.ReplyMarkup = pricesKB(chatID, locs)
 		delMsg := tgbotapi.NewDeleteMessage(chatID, msgID)
@@ -82,16 +77,14 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 	case data == "help":
 		msg.Text = help()
 	case data == "abort":
-		///// TODO: delete(userStates, chatID)
-		///// TODO: replace current keyboard with main keyboard
 		delete(userStates, chatID)
 		text := "Выберите действие."
 		edit := tgbotapi.NewEditMessageTextAndMarkup(chatID, msgID, text, mainMenuKB())
 		bot.Send(edit)
 		return
 	case data == "nocb":
-		ans := tgbotapi.NewCallback(cb.ID, "") // пустое сообщение
-		ans.ShowAlert = false                  // не показывать алерт
+		ans := tgbotapi.NewCallback(cb.ID, "") // empty message
+		ans.ShowAlert = false                  // don't show alert
 		bot.Request(ans)
 	}
 
