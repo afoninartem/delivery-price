@@ -48,6 +48,12 @@ func editLocationsKB(locs []models.Location) tgbotapi.InlineKeyboardMarkup {
 func pricesKB(chatID int64, locs []models.Location) tgbotapi.InlineKeyboardMarkup {
 	var keyboard [][]tgbotapi.InlineKeyboardButton
 	locsWithPrice := getPrices(chatID, locs)
+	var titleRow []tgbotapi.InlineKeyboardButton
+	t1 := tgbotapi.NewInlineKeyboardButtonData("Локация", "nocb")
+	t2 := tgbotapi.NewInlineKeyboardButtonData("Было|Стало", "nocb")
+	t3 := tgbotapi.NewInlineKeyboardButtonData("Поехали!", "nocb")
+	titleRow = append(titleRow, t1, t2, t3)
+	keyboard = append(keyboard, titleRow)
 	for _, loc := range locsWithPrice {
 		priceRow := priceBtnRow(loc)
 		row := tgbotapi.NewInlineKeyboardRow(priceRow...)
@@ -64,7 +70,8 @@ func priceBtnRow(loc models.Location) []tgbotapi.InlineKeyboardButton {
 	var row []tgbotapi.InlineKeyboardButton
 	nameBtn := tgbotapi.NewInlineKeyboardButtonData(loc.Name, "nocb")
 	priceDif := priceDif(loc)
-	row = append(row, nameBtn, priceDif)
+	goBtn := tgbotapi.NewInlineKeyboardButtonURL("🏎️", fmt.Sprintf("https://yandex.ru/maps/?rtext=~%s,%s", loc.Lat, loc.Lng))
+	row = append(row, nameBtn, priceDif, goBtn)
 	return row
 }
 
