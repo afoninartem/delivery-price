@@ -74,10 +74,6 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		msg.ReplyMarkup = pricesKB(chatID, locs)
 		delMsg := tgbotapi.NewDeleteMessage(chatID, msgID)
 		bot.Send(delMsg)
-	// case strings.Contains(data, "https://yandex.ru/maps/"):
-	// 	ans := tgbotapi.NewCallback(cb.ID, "Открываем Яндекс.Карты")
-	// 	ans.ShowAlert = false
-	// 	bot.Request(ans)
 	case data == "help":
 		msg.Text = help()
 	case data == "abort":
