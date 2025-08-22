@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/afoninartem/delivery-price/models"
@@ -18,7 +19,13 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 
 	switch {
 	case data == "new_loc":
+		msg.Text = "Вы можете выбрать точку на карте или ввести координаты вручную."
+		msg.ReplyMarkup = addLocationKB()
+		delMsg := tgbotapi.NewDeleteMessage(chatID, msgID)
+		bot.Send(delMsg)
+	case data == "new_loc_man":
 		msg.Text = "Введите скопированные с карт координаты."
+		msg.ReplyMarkup = backToMainMenuKB()
 		if _, e := userStates[chatID]; e {
 			userStates[chatID].Step = "new_coords"
 		} else {
@@ -76,6 +83,9 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		bot.Send(delMsg)
 	case data == "help":
 		msg.Text = help()
+		ans := tgbotapi.NewCallback(cb.ID, "Раздел помощи.")
+		ans.ShowAlert = false
+		bot.Request(ans)
 	case data == "abort":
 		delete(userStates, chatID)
 		text := "Выберите действие."
@@ -88,5 +98,8 @@ func handleCallback(cb *tgbotapi.CallbackQuery) {
 		bot.Request(ans)
 	}
 
-	bot.Send(msg)
+	_, err := bot.Send(msg)
+	if err != nil {
+		slog.Error("bot send", "error", err)
+	}
 }
