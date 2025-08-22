@@ -3,11 +3,16 @@ package bot
 import (
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/shopspring/decimal"
 
 	"github.com/afoninartem/delivery-price/models"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+)
+
+var (
+	miniAppUrl = os.Getenv("mapAppUrl")
 )
 
 func mainMenuKB() tgbotapi.InlineKeyboardMarkup {
@@ -28,6 +33,21 @@ func mainMenuKB() tgbotapi.InlineKeyboardMarkup {
 			tgbotapi.NewInlineKeyboardButtonData("Помощь", "help"),
 		),
 	)
+	return keyboard
+}
+
+func addLocationKB() tgbotapi.InlineKeyboardMarkup {
+	webApp := tgbotapi.WebAppInfo{URL: miniAppUrl}
+	keyboard := tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonWebApp("Выбрать на карте", webApp),
+		),
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Добавить координаты вручную", "new_loc_man"),
+		),
+		tgbotapi.NewInlineKeyboardRow(tgbotapi.NewInlineKeyboardButtonData("↩️ В главное меню", "abort")),
+	)
+
 	return keyboard
 }
 
@@ -102,4 +122,12 @@ func priceDif(loc models.Location) tgbotapi.InlineKeyboardButton {
 	}
 
 	return tgbotapi.NewInlineKeyboardButtonData(text, "nocb")
+}
+
+func backToMainMenuKB() tgbotapi.InlineKeyboardMarkup {
+	return tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("↩️ В главное меню", "abort"),
+		),
+	)
 }
